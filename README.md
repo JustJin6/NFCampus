@@ -9,7 +9,7 @@ Group 1 (Member)
 Branches
 1. master: NFCampus App's Code (Kotlin, XML, etc.)
 2. Document:
-   i.   Proposal.pdf
+i.   Proposal.pdf
    ii. ⁠ LSEP.pdf
    iii. Individual Contributions to the group.pdf
 ⁠UML Diagram
