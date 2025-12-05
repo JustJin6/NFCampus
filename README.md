@@ -9,14 +9,13 @@ Yong Ken [BSSE2506025] <br>
 Branches
 1. master: NFCampus App's Code (Kotlin, XML, etc.)
 2. Document: <br>
-   i.   &nbsp;&nbsp;&nbsp;&nbsp;Proposal.pdf <br>
-   ii. ⁠ &nbsp;&nbsp;LSEP.pdf <br>
-   iii. &nbsp;&nbsp;Individual Contributions to the group.pdf <br>
-   iv.  &nbsp;&nbsp;UML Diagram <br>
-   v.   &nbsp;&nbsp;&nbsp;Meeting Minutes <br>
-   vi.  ⁠&nbsp;&nbsp;Slides (Weekly Progress) <br>
-   vii. ⁠&nbsp;Slides (Video Record) <br>
-   viii.&nbsp;Video (Unlisted YouTube) <br>
-   ix.  &nbsp;&nbsp;Figma <br>
+   i.   &nbsp;&nbsp;&nbsp;&nbsp;Client Meeting Minutes - NFCampus (Android).pdf <br>
+   ii. ⁠ &nbsp;&nbsp;Figma_Link.md <br>
+   iii. &nbsp;&nbsp;Individual Contributions to the Group - NFCampus (Android).pdf <br>
+   iv.  &nbsp;&nbsp;LSEP - NFCampus (Android).pdf <br>
+   v.   &nbsp;&nbsp;&nbsp;Proposal - NFCampus (Android).pdf <br>
+   vi.  ⁠&nbsp;&nbsp;UML Diagram - NFCampus (Android).pdf <br>
+   vii. ⁠&nbsp;Video Presentation - NFCampus (Android).pdf <br>
+   viii.&nbsp;Weekly Progress Presentation - NFCampus (Android) <br>
 4. PPTX & Video: <br>
    i.    &nbsp;Video
