@@ -1,10 +1,10 @@
 MAL2020 Computing Group Project
 =
 Group 1 (Member)
-Eu Jin Yang [BSSE2506021]
-Ng Kean Chun [BSSE2506036]
-Teoh Yi Shan [BSSE2506022]
-Yong Ken [BSSE2506025]
+1. Eu Jin Yang [BSSE2506021]
+2. Ng Kean Chun [BSSE2506036]
+3. Teoh Yi Shan [BSSE2506022]
+4. Yong Ken [BSSE2506025]
 
 Branches
 1. master: NFCampus App's Code (Kotlin, XML, etc.)
