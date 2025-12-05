@@ -16,6 +16,8 @@ Branches
    v.   &nbsp;&nbsp;&nbsp;Proposal - NFCampus (Android).pdf <br>
    vi.  ⁠&nbsp;&nbsp;UML Diagram - NFCampus (Android).pdf <br>
    vii. ⁠&nbsp;Video Presentation - NFCampus (Android).pdf <br>
-   viii.&nbsp;Weekly Progress Presentation - NFCampus (Android) <br>
+   viii.&nbsp;Weekly Progress Presentation - NFCampus (Android)
 4. PPTX & Video: <br>
-   i.    &nbsp;Video
+   i.   &nbsp;&nbsp;&nbsp;Video Presentation - NFCampus (Android).pptx <br>
+   ii.  &nbsp;&nbsp;Video_Link.md <br>
+   iii. &nbsp;Weekly Progress Presentation - NFCampus (Android).pptx
