@@ -1,6 +1,6 @@
 MAL2020 Computing Group Project
 =
-Group 1 (Member) - NFCampus <br>
+Group 1 (Member) - NFCampus (Android) <br>
 Eu Jin Yang&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   [BSSE2506021] <br>
 Ng Kean Chun [BSSE2506036] <br>
 Teoh Yi Shan&nbsp;&nbsp;&nbsp; [BSSE2506022] <br>
