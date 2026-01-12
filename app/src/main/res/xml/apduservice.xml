@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<host-apdu-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/card_emulation_description"
+    android:requireDeviceUnlock="false">
+
+    <!-- Campus door readers AID -->
+    <aid-group
+        android:description="@string/campus_access"
+        android:category="other">
+
+        <!-- Standard ISO-DEP SELECT AID -->
+        <aid-filter android:name="D2760000850101" />
+        <aid-filter android:name="F0394148148100" />
+        <aid-filter android:name="F0010203040506" />
+        <aid-filter android:name="A0000002471001" />
+
+        <!-- Generic AIDs that many door systems use -->
+        <aid-filter android:name="A0000000030000" />
+        <aid-filter android:name="A000000003000000" />
+
+        <!-- Common AIDs for access control -->
+        <aid-filter android:name="F00000000000"/>
+        <aid-filter android:name="F00000000001"/>
+        <aid-filter android:name="F00000000002"/>
+        <aid-filter android:name="A00000000300000000"/>
+        <aid-filter android:name="A0000000040000"/>
+        <aid-filter android:name="A00000000401"/>
+        <aid-filter android:name="A00000000402"/>
+        <aid-filter android:name="A0000000031010"/>
+        <aid-filter android:name="A0000000032020"/>
+
+    </aid-group>
+
+</host-apdu-service>

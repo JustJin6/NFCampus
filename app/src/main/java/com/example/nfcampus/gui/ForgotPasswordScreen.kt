@@ -246,8 +246,6 @@ fun EmailSentStep(
             modifier = Modifier.size(80.dp)
         )
 
-        Spacer(Modifier.height(32.dp))
-
         Text(
             "Check Your Email",
             style = MaterialTheme.typography.headlineMedium,

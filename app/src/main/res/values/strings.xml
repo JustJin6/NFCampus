@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">NFCampus</string>
+    <string name="card_emulation_description">Card Emulation Description</string>
+    <string name="campus_access">Campus Access</string>
 </resources>
