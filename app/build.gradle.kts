@@ -83,7 +83,6 @@ dependencies {
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
 
-
     //Coil dependency for image loading
     implementation(libs.coil.compose)
 
@@ -96,4 +95,11 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
+
+    // Biometrics
+    implementation(libs.androidx.biometric)
+    implementation(libs.androidx.security.crypto)
+
+    // QR Code
+    implementation(libs.core)
 }

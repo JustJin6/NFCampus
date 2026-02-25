@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- ISO 14443-3A (MIFARE Classic, Ultralight, etc.) -->
+    <tech-list>
+        <tech>android.nfc.tech.NfcA</tech>
+    </tech-list>
+
+    <!-- ISO 14443-4A -->
+    <tech-list>
+        <tech>android.nfc.tech.NfcA</tech>
+        <tech>android.nfc.tech.IsoDep</tech>
+    </tech-list>
+
+    <!-- MIFARE Classic -->
+    <tech-list>
+        <tech>android.nfc.tech.NfcA</tech>
+        <tech>android.nfc.tech.MifareClassic</tech>
+    </tech-list>
+
+    <!-- MIFARE Ultralight -->
+    <tech-list>
+        <tech>android.nfc.tech.NfcA</tech>
+        <tech>android.nfc.tech.MifareUltralight</tech>
+    </tech-list>
+
+    <!-- NDEF -->
+    <tech-list>
+        <tech>android.nfc.tech.NfcA</tech>
+        <tech>android.nfc.tech.Ndef</tech>
+    </tech-list>
+</resources>

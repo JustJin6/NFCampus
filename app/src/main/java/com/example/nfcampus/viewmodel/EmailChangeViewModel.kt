@@ -68,10 +68,6 @@ class EmailChangeViewModel : ViewModel() {
         _state.value = EmailChangeState.Idle
         _uiState.value = EmailChangeUIState.Initial
     }
-
-    fun setUIState(state: EmailChangeUIState) {
-        _uiState.value = state
-    }
 }
 
 sealed class EmailChangeState {

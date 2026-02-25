@@ -26,7 +26,8 @@ import kotlinx.coroutines.delay
 fun RegistrationVerificationDialog(
     email: String,
     viewModel: AuthViewModel,
-    onVerified: () -> Unit,
+    uid: String,
+    onVerified: (uid: String) -> Unit,
     onDismiss: () -> Unit
 ) {
     val context = LocalContext.current
@@ -196,7 +197,7 @@ fun RegistrationVerificationDialog(
     LaunchedEffect(state) {
         if (state is AuthState.Verified) {
             delay(1500) // Show success message for 1.5 seconds
-            onVerified()
+            onVerified(uid)
         }
     }
 }

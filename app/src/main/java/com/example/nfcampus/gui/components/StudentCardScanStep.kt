@@ -28,6 +28,7 @@ import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import com.example.nfcampus.util.processImageForOcr
 
 fun String.toTitleCase(): String {
     if (this.isBlank()) return ""
@@ -155,37 +156,42 @@ fun StudentCardScanStep(
         onResult = { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val scanningResult = GmsDocumentScanningResult.fromActivityResultIntent(result.data)
-                val croppedImageUri = scanningResult?.pages?.firstOrNull()?.imageUri
+                val originalCroppedUri = scanningResult?.pages?.firstOrNull()?.imageUri
 
-                if (croppedImageUri != null) {
+                if (originalCroppedUri != null) {
                     if (isScanningFront) {
-                        // Logic for FRONT card scan: Perform OCR
+                        // Logic for FRONT card scan: Process image, then perform OCR
                         coroutineScope.launch {
                             try {
-                                val image = InputImage.fromFilePath(context, croppedImageUri)
+                                // PROCESS the image to get a high-contrast version
+                                val processedOcrUri = processImageForOcr(context, originalCroppedUri)
+
+                                // 3. Use the PROCESSED image for OCR
+                                val image = InputImage.fromFilePath(context, processedOcrUri)
                                 val textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
                                 val visionText = textRecognizer.process(image).await()
 
+                                // 4. Parse the text. Use the ORIGINAL URI for display.
                                 val validatedData =
                                     parseTextToScannedData(
                                         visionText.text,
-                                        croppedImageUri,
+                                        originalCroppedUri, // This is the color image for the UI
                                         null
                                     )
                                 if (validatedData != null) {
                                     parsedData = validatedData
-                                    frontImageUri = croppedImageUri
+                                    frontImageUri = originalCroppedUri // Update UI with the color image
                                 } else {
                                     showScanErrorDialog = true
                                 }
                             } catch (e: Exception) {
-                                Log.e("StudentCardScanStep", "OCR failed", e)
+                                Log.e("StudentCardScanStep", "OCR or processing failed", e)
                                 showScanErrorDialog = true
                             }
                         }
                     } else {
-                        // Logic for BACK card scan: Just save the image URI
-                        backImageUri = croppedImageUri
+                        // Logic for BACK card scan
+                        backImageUri = originalCroppedUri
                     }
                 }
             }

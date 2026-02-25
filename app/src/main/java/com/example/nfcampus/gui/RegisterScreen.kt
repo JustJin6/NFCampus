@@ -1,16 +1,20 @@
 package com.example.nfcampus.gui
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.content.edit
 import com.example.nfcampus.model.User
 import com.example.nfcampus.repository.UserRepository
 import com.example.nfcampus.gui.components.StudentCardScanStep
@@ -19,6 +23,7 @@ import com.example.nfcampus.gui.components.NFCSetupStep
 import com.example.nfcampus.util.ScannedData
 import com.example.nfcampus.viewmodel.AuthViewModel
 import com.example.nfcampus.dialog.RegistrationVerificationDialog
+import com.example.nfcampus.repository.ActivityLogRepository
 import kotlinx.coroutines.launch
 
 // Helper function to check if ScannedData is complete
@@ -41,10 +46,11 @@ fun RegisterScreen(
     val authViewModel = remember { AuthViewModel() }
     val coroutineScope = rememberCoroutineScope()
 
-    var currentStep by remember { mutableStateOf(0) }
+    var currentStep by remember { mutableIntStateOf(0) }
     var scannedData by remember { mutableStateOf(ScannedData()) }
     var userEmail by remember { mutableStateOf("") }
     var userPassword by remember { mutableStateOf("") }
+    var userId by remember { mutableStateOf("") }
     var showVerificationDialog by remember { mutableStateOf(false) }
 
     // State to control the error dialog
@@ -124,20 +130,28 @@ fun RegisterScreen(
                 1 -> RegistrationFormStep(
                     scannedData = scannedData,
                     authViewModel = authViewModel,
-                    onFormComplete = { email, password ->
+                    onFormComplete = { email, password, uid ->
                         userEmail = email
                         userPassword = password
+                        userId = uid
                     },
-                    onVerificationRequired = { email ->
+                    onVerificationRequired = { email, uid ->
                         userEmail = email
+                        userId = uid
                         showVerificationDialog = true
                     }
                 )
                 2 -> NFCSetupStep(
                     onSetupComplete = { nfcUid ->
+                        // Store UID in SharedPreferences
+                        val sharedPrefs = context.getSharedPreferences("nfcampus_prefs", Context.MODE_PRIVATE)
+                        sharedPrefs.edit {
+                            putString("campus_card_uid", nfcUid.replace(":", "").uppercase())
+                        }
                         // Create and save user to Firestore
                         coroutineScope.launch {
                             val user = User(
+                                uid = userId,
                                 studentId = scannedData.studentId,
                                 email = userEmail,
                                 password = userPassword,
@@ -146,9 +160,16 @@ fun RegisterScreen(
                                 major = scannedData.major,
                                 intake = scannedData.intake,
                                 nfcUid = nfcUid,
-                                isVerified = true
+                                isVerified = true,
+                                frontImageUri = scannedData.frontImageUri?.toString(),
+                                backImageUri = scannedData.backImageUri?.toString()
                             )
                             userRepository.saveUser(user)
+
+                            // Add activity log for registration
+                            val logRepository = ActivityLogRepository()
+                            logRepository.addLog(userId, "User Registered")
+
                             authViewModel.signOut()
                             onRegisterComplete()
                         }
@@ -164,7 +185,8 @@ fun RegisterScreen(
         RegistrationVerificationDialog(
             email = userEmail,
             viewModel = authViewModel,
-            onVerified = {
+            uid = userId,
+            onVerified = { verifiedUid ->
                 // Email verified, proceed to NFC setup
                 showVerificationDialog = false
                 currentStep = 2

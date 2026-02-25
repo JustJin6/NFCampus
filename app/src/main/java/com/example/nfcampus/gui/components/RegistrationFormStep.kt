@@ -21,9 +21,9 @@ import com.example.nfcampus.viewmodel.AuthViewModel
 @Composable
 fun RegistrationFormStep(
     scannedData: ScannedData,
-    authViewModel: AuthViewModel, // Add AuthViewModel parameter
-    onFormComplete: (String, String) -> Unit,
-    onVerificationRequired: (String) -> Unit // Add callback for verification
+    authViewModel: AuthViewModel,
+    onFormComplete: (email: String, password: String, uid: String) -> Unit,
+    onVerificationRequired: (email: String, uid: String) -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -39,10 +39,10 @@ fun RegistrationFormStep(
     val authState by authViewModel.state.collectAsState()
 
     LaunchedEffect(authState) {
-        when (authState) {
+        when (val state = authState) {
             is AuthState.RequiresVerification -> {
                 isLoading = false
-                onVerificationRequired(email)
+                onVerificationRequired(email, state.uid)
             }
             is AuthState.Error -> {
                 isLoading = false

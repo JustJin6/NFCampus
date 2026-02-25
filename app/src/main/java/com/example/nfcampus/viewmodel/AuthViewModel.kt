@@ -13,7 +13,7 @@ sealed class AuthState {
     object Loading : AuthState()
     data class Success(val message: String = "") : AuthState()
     data class Error(val message: String) : AuthState()
-    data class RequiresVerification(val email: String) : AuthState()
+    data class RequiresVerification(val email: String, val uid: String) : AuthState()
     data class Verified(val email: String) : AuthState()
 }
 
@@ -32,7 +32,10 @@ class AuthViewModel : ViewModel() {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { createTask ->
                 if (createTask.isSuccessful) {
-                    _state.value = AuthState.RequiresVerification(email)
+                    val user = createTask.result?.user
+                    if (user != null) {
+                        _state.value = AuthState.RequiresVerification(email, user.uid)
+                    }
                     sendVerificationEmail(shouldNotifyState = false)
                 } else {
                     _state.value = AuthState.Error(
@@ -49,7 +52,7 @@ class AuthViewModel : ViewModel() {
                 if (loginTask.isSuccessful) {
                     val user = auth.currentUser
                     if (user != null) {
-                        _state.value = AuthState.RequiresVerification(user.email ?: email)
+                        _state.value = AuthState.RequiresVerification(user.email ?: email, user.uid)
                         sendVerificationEmail(shouldNotifyState = false)
                     } else {
                         _state.value = AuthState.Error("User not found")
@@ -107,7 +110,7 @@ class AuthViewModel : ViewModel() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     if (shouldNotifyState)
-                        _state.value = AuthState.RequiresVerification(user.email ?: "")
+                        _state.value = AuthState.RequiresVerification(user.email ?: "", user.uid)
                 } else {
                     val msg = task.exception?.localizedMessage ?: "Failed to send verification email"
                     if (msg.contains("blocked all requests", ignoreCase = true)) {
@@ -138,7 +141,7 @@ class AuthViewModel : ViewModel() {
         user.sendEmailVerification()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    _state.value = AuthState.RequiresVerification(user.email ?: "")
+                    _state.value = AuthState.RequiresVerification(user.email ?: "", user.uid)
                 } else {
                     val msg = task.exception?.localizedMessage ?: "Failed to send verification email"
                     _state.value = AuthState.Error(msg)

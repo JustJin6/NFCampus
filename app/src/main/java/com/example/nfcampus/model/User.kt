@@ -1,6 +1,7 @@
 package com.example.nfcampus.model
 
 data class User(
+    val uid: String = "",
     val studentId: String = "",
     val email: String = "",
     val password: String = "",
@@ -9,5 +10,7 @@ data class User(
     val major: String = "",
     val intake: String = "",
     val nfcUid: String? = null,
-    val isVerified: Boolean = false
+    val isVerified: Boolean = false,
+    val frontImageUri: String? = null,
+    val backImageUri: String? = null
 )
