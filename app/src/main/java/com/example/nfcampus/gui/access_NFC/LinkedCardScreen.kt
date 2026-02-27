@@ -14,6 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
@@ -30,7 +31,6 @@ import kotlinx.coroutines.delay
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun LinkedCardScreen(
-    onUpdateCard: () -> Unit,
     onLogoutAndNavigateToLogin: () -> Unit
 ) {
     val context = LocalContext.current
@@ -185,63 +185,6 @@ fun LinkedCardScreen(
                     }
                 }
             }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Update Card Section
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.1f)
-                )
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        "Update Card",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Medium
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Text(
-                        "Click this button if you have a new campus card.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontStyle = FontStyle.Italic
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Button(
-                        onClick = onUpdateCard,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
-                    ) {
-                        Text("Update Linked Card")
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(36.dp))
-
-            HorizontalDivider(
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-                thickness = 1.0.dp,
-                color = MaterialTheme.colorScheme.outlineVariant
-            )
 
             Spacer(modifier = Modifier.height(36.dp))
 
@@ -443,7 +386,7 @@ fun LinkedCardScreen(
                             imageVector = Icons.Default.CheckCircle,
                             contentDescription = "Success",
                             modifier = Modifier.size(80.dp),
-                            tint = MaterialTheme.colorScheme.tertiary
+                            tint = Color(0xFF4CAF50)
                         )
 
                         Spacer(modifier = Modifier.height(24.dp))

@@ -25,7 +25,6 @@ import com.example.nfcampus.viewmodel.PasswordChangeViewModel
 import com.example.nfcampus.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
-import android.net.Uri as AndroidUri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -39,7 +38,9 @@ import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import java.util.UUID
+import androidx.core.net.toUri
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 sealed class Screen(val route: String, val title: String, val icon: ImageVector?) {
     object Home : Screen("home", "Home", Icons.Default.Home)
@@ -47,7 +48,6 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector?
     object Settings : Screen("settings", "Settings", Icons.Default.Settings)
     object NFCTroubleshooting : Screen("nfc_troubleshooting", "NFC Troubleshooting", null)
     object LinkedCard : Screen("linked_card", "Linked Card", null)
-    object UpdateCard : Screen("update_card", "Update Card", null)
     object PrivacyPolicy : Screen("privacy_policy", "Privacy Policy", null)
     object TermsOfService : Screen("terms_of_service", "Terms of Service", null)
     object ChangeEmailPassword : Screen("change_email_password", "Change Email & Password", null)
@@ -61,7 +61,6 @@ fun MainScreen(
     onLogout: () -> Unit
 ) {
     var currentScreen by remember { mutableStateOf<Screen>(Screen.Home) }
-    var updateStep by remember { mutableIntStateOf(0) }
 
     val emailChangeViewModel = remember { EmailChangeViewModel() }
     val passwordChangeViewModel = remember { PasswordChangeViewModel() }
@@ -77,7 +76,6 @@ fun MainScreen(
                         when (currentScreen) {
                             Screen.NFCTroubleshooting -> "Settings"
                             Screen.LinkedCard -> "Settings"
-                            Screen.UpdateCard -> "Update Linked Card"
                             Screen.PrivacyPolicy -> "Settings"
                             Screen.TermsOfService -> "Settings"
                             Screen.ChangeEmailPassword -> "Settings"
@@ -89,20 +87,6 @@ fun MainScreen(
                 },
                 navigationIcon = {
                     when (currentScreen) {
-                        Screen.UpdateCard -> {
-                            IconButton(onClick = {
-                                if (updateStep > 0) {
-                                    updateStep--
-                                } else {
-                                    currentScreen = Screen.LinkedCard
-                                }
-                            }) {
-                                Icon(
-                                    Icons.AutoMirrored.Filled.ArrowBack,
-                                    contentDescription = "Back"
-                                )
-                            }
-                        }
                         Screen.NFCTroubleshooting,
                         Screen.LinkedCard,
                         Screen.PrivacyPolicy,
@@ -246,25 +230,9 @@ fun MainScreen(
                     }
                 )
                 Screen.LinkedCard -> LinkedCardScreen(
-                    onUpdateCard = {
-                        updateStep = 0
-                        currentScreen = Screen.UpdateCard
-                    },
                     onLogoutAndNavigateToLogin = {
-                        // This will be handled by the success dialog auto-dismiss
-                        // The dialog will auto-navigate after 2 seconds
-                    }
-                )
-                Screen.UpdateCard -> UpdateScreen(
-                    currentStep = updateStep,
-                    onStepChange = { updateStep = it },
-                    onUpdateComplete = {
-                        updateStep = 0
-                        currentScreen = Screen.LinkedCard
-                    },
-                    onNavigateBack = {
-                        updateStep = 0
-                        currentScreen = Screen.LinkedCard
+                        Firebase.auth.signOut()
+                        onLogout()
                     }
                 )
                 Screen.NFCTroubleshooting -> NFCTroubleshootingScreen()
@@ -279,6 +247,7 @@ fun MainScreen(
 fun HomeContent() {
     val userRepository = remember { UserRepository() }
     val auth = FirebaseAuth.getInstance()
+    val firebaseEmail = FirebaseAuth.getInstance().currentUser?.email
     val currentUserUid = auth.currentUser?.uid
     val currentUser = remember { mutableStateOf<User?>(null) }
     val coroutineScope = rememberCoroutineScope()
@@ -302,7 +271,7 @@ fun HomeContent() {
             val uniqueTimestamp = System.currentTimeMillis()
 
             // Construct the URL with the user's ID as a query parameter
-            val urlWithParams = AndroidUri.parse(baseUrl)
+            val urlWithParams = baseUrl.toUri()
                 .buildUpon()
                 .appendQueryParameter("userId", userId)
                 .appendQueryParameter("t", uniqueTimestamp.toString())
@@ -328,6 +297,10 @@ fun HomeContent() {
                 // Generate the initial QR code once user data is loaded
                 if (currentUser.value != null) {
                     launch { generateNewQRCode(currentUser.value) }
+                }
+
+                if (firebaseEmail != null && firebaseEmail != currentUser.value?.email) {
+                    userRepository.updateUserEmail(currentUserUid, firebaseEmail)
                 }
             }
         }

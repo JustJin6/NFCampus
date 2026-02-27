@@ -16,12 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import android.content.Context
-import android.content.Intent
-import android.provider.Settings
-import androidx.biometric.BiometricManager
 import androidx.compose.material.icons.automirrored.filled.Help
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
 import androidx.core.content.edit
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,43 +31,10 @@ fun SettingsScreen(
 ) {
     val context = LocalContext.current
     val preferences = context.getSharedPreferences("nfcampus_prefs", Context.MODE_PRIVATE)
-    val currentUser = Firebase.auth.currentUser
-    val userId = currentUser?.uid ?: ""
 
     // Load initial values from preferences
-    var biometricEnabled by remember { mutableStateOf(preferences.getBoolean("biometric_${userId}", false)) }
     var hapticFeedbackEnabled by remember { mutableStateOf(preferences.getBoolean("haptic_feedback", true)) }
     var accessAlertsEnabled by remember { mutableStateOf(preferences.getBoolean("access_alerts", false)) }
-
-    // Function to check if biometric is available and enrolled
-    fun checkBiometricAvailability(): Boolean {
-        val bioManager = BiometricManager.from(context)
-        return bioManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_SUCCESS
-    }
-
-    // Handle biometric toggle change
-    fun onBiometricToggle(newValue: Boolean) {
-        if (newValue) {
-            if (!checkBiometricAvailability()) {
-                // No biometric enrolled → prompt user to go to settings
-                android.app.AlertDialog.Builder(context)
-                    .setTitle("Biometric not set up")
-                    .setMessage("Please enroll a fingerprint in system settings to use biometric login.")
-                    .setPositiveButton("Go to Settings") { _, _ ->
-                        context.startActivity(Intent(Settings.ACTION_SECURITY_SETTINGS))
-                    }
-                    .setNegativeButton("Cancel", null)
-                    .show()
-                return // keep toggle off
-            }
-            // Success – store enabled
-            preferences.edit { putBoolean("biometric_${userId}", true) }
-            biometricEnabled = true
-        } else {
-            preferences.edit { putBoolean("biometric_${userId}", false) }
-            biometricEnabled = false
-        }
-    }
 
     Scaffold { _ ->
         Column(
@@ -88,20 +50,6 @@ fun SettingsScreen(
                 subtitle = "Change your email / password anytime",
                 icon = Icons.Default.Email,
                 onClick = { onNavigateToChangeEmailPassword() }
-            )
-
-            HorizontalDivider(
-                modifier = Modifier.padding(start = 56.dp, end = 16.dp),
-                thickness = 1.0.dp,
-                color = MaterialTheme.colorScheme.outlineVariant
-            )
-
-            SettingsToggle(
-                title = "Biometric Login",
-                subtitle = "Use Touch ID to login the app",
-                icon = Icons.Default.Fingerprint,
-                checked = biometricEnabled,
-                onCheckedChange = { onBiometricToggle(it) }
             )
 
             HorizontalDivider(

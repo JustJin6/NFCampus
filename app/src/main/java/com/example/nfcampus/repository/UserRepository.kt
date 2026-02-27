@@ -13,6 +13,13 @@ class UserRepository {
         usersCollection.document(user.uid).set(user)
     }
 
+    fun updateUserEmail(uid: String, newEmail: String) {
+        FirebaseFirestore.getInstance()
+            .collection("users")
+            .document(uid)
+            .update("email", newEmail)
+    }
+
     suspend fun getUserByUid(uid: String): User? {
         return try {
             val document = usersCollection.document(uid).get().await()

@@ -5,7 +5,7 @@
 
     <aid-group
         android:description="@string/campus_access"
-        android:category="other">
+        android:category="payment">
         <aid-filter android:name="A00000006203010C0601"/>
     </aid-group>
 

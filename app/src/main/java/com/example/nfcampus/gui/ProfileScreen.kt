@@ -1,7 +1,6 @@
 package com.example.nfcampus.gui
 
 import android.annotation.SuppressLint
-import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -13,6 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -20,6 +21,7 @@ import com.example.nfcampus.model.User
 import com.example.nfcampus.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
+import androidx.core.net.toUri
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -51,11 +53,7 @@ fun ProfileScreen() {
         }
     }
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(title = { Text("My Student Card") })
-        }
-    ) { paddingValues ->
+    Scaffold { _ ->
         if (isLoading) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
@@ -69,12 +67,23 @@ fun ProfileScreen() {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(paddingValues)
                         .padding(16.dp)
                         .verticalScroll(rememberScrollState()),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
+                    Text(
+                        text = "My Student Card",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Normal,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp),
+                        textAlign = TextAlign.Center
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
                     // Determine which URI to display
                     val imageUriToShow = if (isFrontCardVisible) {
                         user.frontImageUri
@@ -91,7 +100,7 @@ fun ProfileScreen() {
                         if (imageUriToShow != null) {
                             AsyncImage(
                                 model = ImageRequest.Builder(LocalContext.current)
-                                    .data(Uri.parse(imageUriToShow))
+                                    .data(imageUriToShow.toUri())
                                     .crossfade(true)
                                     .build(),
                                 contentDescription = if (isFrontCardVisible) "Front of Student ID Card" else "Back of Student ID Card",

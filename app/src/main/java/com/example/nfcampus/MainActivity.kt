@@ -14,29 +14,20 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.util.Log
 import androidx.activity.compose.setContent
-import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.edit
 import com.example.nfcampus.gui.LoginScreen
 import com.example.nfcampus.gui.MainScreen
 import com.example.nfcampus.gui.RegisterScreen
 import com.example.nfcampus.ui.theme.NFCampusTheme
 import com.example.nfcampus.repository.ActivityLogRepository
-import com.example.nfcampus.util.BiometricAuthManager
 import com.google.firebase.Firebase
 import com.google.firebase.auth.*
 import com.google.firebase.firestore.FirebaseFirestore
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Fingerprint
-import androidx.compose.material3.*
-import androidx.compose.foundation.layout.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentActivity
 
 class MainActivity : FragmentActivity() {
@@ -293,12 +284,6 @@ class MainActivity : FragmentActivity() {
         onNFCTagDetected = null
     }
 
-    fun isBiometricEnabledForCurrentUser(): Boolean {
-        val currentUser = Firebase.auth.currentUser ?: return false
-        val prefs = getSharedPreferences("nfcampus_prefs", MODE_PRIVATE)
-        return prefs.getBoolean("biometric_${currentUser.uid}", false)
-    }
-
     private fun vibrateIfEnabled() {
         val prefs = getSharedPreferences("nfcampus_prefs", MODE_PRIVATE)
         if (prefs.getBoolean("haptic_feedback", true)) {
@@ -316,75 +301,11 @@ class MainActivity : FragmentActivity() {
 }
 
 @Composable
-fun BiometricLockScreen(
-    onAuthenticated: () -> Unit,
-    onCancel: () -> Unit
-) {
-    val context = LocalContext.current
-    val activity = context as? MainActivity
-
-    if (activity == null) {
-        // Fallback UI – maybe show an error
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Error: Activity not available")
-        }
-        return
-    }
-
-    val biometricManager = remember { BiometricAuthManager(context, activity) }
-
-    LaunchedEffect(Unit) {
-        biometricManager.authenticate(
-            onSuccess = { onAuthenticated() },
-            onError = { errorCode, _ ->
-                if (errorCode == BiometricPrompt.ERROR_NEGATIVE_BUTTON ||
-                    errorCode == BiometricPrompt.ERROR_USER_CANCELED) {
-                    onCancel()
-                }
-            }
-        )
-    }
-
-    // Simple UI while waiting for biometric
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(
-                Icons.Default.Fingerprint,
-                contentDescription = null,
-                modifier = Modifier.size(80.dp),
-                tint = MaterialTheme.colorScheme.primary
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text("Authenticate to continue", style = MaterialTheme.typography.headlineSmall)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text("Use your fingerprint to unlock the app")
-            Spacer(modifier = Modifier.height(32.dp))
-            Button(onClick = { biometricManager.cancelAuthentication(); onCancel() }) {
-                Text("Cancel")
-            }
-        }
-    }
-}
-
-@Composable
 fun NFCampusApp(
     onSyncUid: (String) -> Unit = {}
 ) {
-    val context = LocalContext.current
-    val activity = context as? MainActivity
     var currentScreen by remember { mutableStateOf(getInitialScreen(onSyncUid)) }
-    var isBiometricAuthenticated by remember { mutableStateOf(false) }
     val logRepository = remember { ActivityLogRepository() }
-
-    // Check if biometric is required and not yet authenticated
-    val requiresBiometric = remember(currentScreen) {
-        currentScreen == "main" &&
-                activity?.isBiometricEnabledForCurrentUser() == true &&
-                !isBiometricAuthenticated
-    }
 
     LaunchedEffect(currentScreen) {
         if (currentScreen == "main") {
@@ -394,39 +315,26 @@ fun NFCampusApp(
         }
     }
 
-    if (requiresBiometric) {
-        BiometricLockScreen(
-            onAuthenticated = { isBiometricAuthenticated = true },
-            onCancel = {
-                // If user cancels, go back to login
+    when (currentScreen) {
+        "login" -> LoginScreen(
+            onLoginSuccess = {
+                currentScreen = "main"
+                Firebase.auth.currentUser?.uid?.let { userId ->
+                    onSyncUid(userId)
+                }
+            },
+            onNavigateToRegister = { currentScreen = "register" }
+        )
+        "register" -> RegisterScreen(
+            onRegisterComplete = { currentScreen = "login" },
+            onNavigateToLogin = { currentScreen = "login"}
+        )
+        "main" -> MainScreen(
+            onLogout = {
                 Firebase.auth.signOut()
                 currentScreen = "login"
             }
         )
-    } else {
-        when (currentScreen) {
-            "login" -> LoginScreen(
-                onLoginSuccess = {
-                    currentScreen = "main"
-                    isBiometricAuthenticated = false // reset for next session
-                    Firebase.auth.currentUser?.uid?.let { userId ->
-                        onSyncUid(userId)
-                    }
-                },
-                onNavigateToRegister = { currentScreen = "register" }
-            )
-            "register" -> RegisterScreen(
-                onRegisterComplete = { currentScreen = "login" },
-                onNavigateToLogin = { currentScreen = "login"}
-            )
-            "main" -> MainScreen(
-                onLogout = {
-                    Firebase.auth.signOut()
-                    currentScreen = "login"
-                    isBiometricAuthenticated = false
-                }
-            )
-        }
     }
 }
 
