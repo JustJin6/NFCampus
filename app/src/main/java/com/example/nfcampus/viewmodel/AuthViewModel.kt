@@ -52,8 +52,16 @@ class AuthViewModel : ViewModel() {
                 if (loginTask.isSuccessful) {
                     val user = auth.currentUser
                     if (user != null) {
-                        _state.value = AuthState.RequiresVerification(user.email ?: email, user.uid)
-                        sendVerificationEmail(shouldNotifyState = false)
+                        if (user.isEmailVerified) {
+                            // If they are already verified, the login is a success.
+                            _state.value = AuthState.Success("Login successful")
+                        } else {
+                            // If they are not verified yet, require verification.
+                            _state.value = AuthState.RequiresVerification(user.email ?: email, user.uid)
+                            sendVerificationEmail(shouldNotifyState = false)
+                        }
+                        /*_state.value = AuthState.RequiresVerification(user.email ?: email, user.uid)
+                        sendVerificationEmail(shouldNotifyState = false)*/
                     } else {
                         _state.value = AuthState.Error("User not found")
                     }
