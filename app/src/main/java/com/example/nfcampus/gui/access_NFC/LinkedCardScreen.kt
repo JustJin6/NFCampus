@@ -3,6 +3,7 @@ package com.example.nfcampus.gui.access_NFC
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -25,6 +26,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.core.content.edit
 import com.example.nfcampus.MainActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,9 +62,9 @@ fun LinkedCardScreen(
     // Success dialog auto-dismiss
     LaunchedEffect(showSuccessDialog) {
         if (showSuccessDialog) {
-            delay(2000) // Show for 2 seconds
+            delay(3000) // Show for 3 seconds
             showSuccessDialog = false
-            onLogoutAndNavigateToLogin()
+           // onLogoutAndNavigateToLogin()
         }
     }
 
@@ -322,36 +324,73 @@ fun LinkedCardScreen(
                             // YES Button
                             Button(
                                 onClick = {
+                                    Log.d("TerminateDebug", "1. Start Termination Process")
                                     showTerminateDialog = false
-                                    // Clear stored UID
-                                    activity?.let {
-                                        it.getSharedPreferences(
-                                            "nfcampus_prefs",
-                                            Context.MODE_PRIVATE
-                                        )
-                                            .edit {
-                                                remove("campus_card_uid")
-                                            }
-                                    }
-                                    // Disable HCE mode
-                                    activity?.disableHCEMode()
-                                    storedCardUID.value = null
-
-                                    // Delete user account from Firebase
                                     val auth = FirebaseAuth.getInstance()
                                     val currentUser = auth.currentUser
-                                    currentUser?.delete()?.addOnCompleteListener { task ->
-                                        if (task.isSuccessful) {
-                                            // Sign out and show success dialog
-                                            auth.signOut()
-                                            showSuccessDialog = true
-                                        }
+                                    val userId = currentUser?.uid
+                                    val db = FirebaseFirestore.getInstance()
+
+                                    if (userId != null && currentUser != null) {
+                                        showSuccessDialog = true
+
+                                        // 1. Delete the ENTRIES sub-collection in activity_logs
+                                        Log.d("TerminateDebug", "2. Fetching logs from activity_logs/$userId/entries")
+                                        db.collection("activity_logs")
+                                            .document(userId)
+                                            .collection("entries")
+                                            .get()
+                                            .addOnSuccessListener { snapshot ->
+                                                val batch = db.batch()
+                                                for (doc in snapshot) {
+                                                    batch.delete(doc.reference)
+                                                }
+
+                                                // 2. Commit logs, then delete the userId document in activity_logs, then users
+                                                batch.commit().addOnCompleteListener {
+                                                    Log.d("TerminateDebug", "3. Logs wiped. Deleting activity_logs doc and user profile.")
+
+                                                    // Delete the parent doc in activity_logs
+                                                    db.collection("activity_logs").document(userId).delete()
+
+                                                    // Delete the main user profile
+                                                    db.collection("users").document(userId).delete()
+                                                        .addOnCompleteListener {
+                                                            Log.d("TerminateDebug", "4. Firestore cleaned. Deleting Auth.")
+
+                                                            // 3. Delete Auth Account
+                                                            currentUser.delete().addOnCompleteListener { task ->
+                                                                // 4. SharedPreference/Local Cleanup
+                                                                activity?.let { act ->
+                                                                    act.getSharedPreferences("nfcampus_prefs", Context.MODE_PRIVATE)
+                                                                        .edit { clear() }
+                                                                    act.disableHCEMode()
+                                                                }
+                                                                storedCardUID.value = null
+
+                                                                if (task.isSuccessful) {
+                                                                    Log.d("TerminateDebug", "5. FULL SUCCESS")
+                                                                    // Navigation is handled by the showSuccessDialog LaunchedEffect
+                                                                    onLogoutAndNavigateToLogin()
+                                                                } else {
+                                                                    Log.e("TerminateDebug", "Auth Delete Failed: ${task.exception?.message}")
+                                                                    auth.signOut()
+                                                                    onLogoutAndNavigateToLogin()
+                                                                }
+                                                            }
+                                                        }
+                                                }
+                                            }
+                                            .addOnFailureListener { e ->
+                                                Log.e("TerminateDebug", "Firestore Failed: ${e.message}")
+                                                auth.signOut()
+                                                onLogoutAndNavigateToLogin()
+                                            }
                                     }
                                 },
                                 modifier = Modifier.weight(1f),
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = MaterialTheme.colorScheme.error,
-                                    contentColor = MaterialTheme.colorScheme.onError
+                                    containerColor = MaterialTheme.colorScheme.error
                                 )
                             ) {
                                 Text(

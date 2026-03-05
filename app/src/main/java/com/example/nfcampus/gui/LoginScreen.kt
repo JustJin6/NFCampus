@@ -1,14 +1,20 @@
 package com.example.nfcampus.gui
 
+import android.content.Context
+import android.provider.Settings
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -18,6 +24,7 @@ import com.example.nfcampus.viewmodel.AuthViewModel
 import com.example.nfcampus.viewmodel.ForgotPasswordViewModel
 import com.example.nfcampus.dialog.LoginVerificationDialog
 import com.example.nfcampus.R
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlin.text.isNotBlank
 import kotlin.text.isNotEmpty
 
@@ -26,8 +33,22 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onNavigateToRegister: () -> Unit
 ) {
+    val context = LocalContext.current
+    val androidId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+    Log.d("DeviceDebug", "My unique ID: $androidId")
+
+    // Access the shared preferences throughout the app
+    val prefs = remember { context.getSharedPreferences("nfcampus_prefs", Context.MODE_PRIVATE) }
+
+    // Check if there is NFC card linked?
+    val isCardLinked = remember { prefs.getString("campus_card_uid", null) != null }
+
+    // Check if there is an account already registered
+    val isDeviceOccupied = isCardLinked
+
     val authViewModel = remember { AuthViewModel() }
     val forgotPasswordViewModel = remember { ForgotPasswordViewModel() }
+    val authState by authViewModel.state.collectAsState()
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -37,8 +58,8 @@ fun LoginScreen(
     var userEmailForVerification by remember { mutableStateOf("") }
     var storedPassword by remember { mutableStateOf("") }
     var showForgotPasswordScreen by remember { mutableStateOf(false) }
-
-    val authState by authViewModel.state.collectAsState()
+    var isHardwareLocked by remember { mutableStateOf(false) }
+    var showLockedDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(authState) {
         when (authState) {
@@ -180,9 +201,54 @@ fun LoginScreen(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
+        
+        // When the screen opens, check if this specific phone is already in use
+        LaunchedEffect(Unit) {
+            Log.d("DeviceDebug", "Screen Opened. ID: $androidId")
+            FirebaseFirestore.getInstance()
+                .collection("users")
+                .whereEqualTo("deviceId", androidId)
+                .get()
+                .addOnSuccessListener { snapshot ->
+                    if (!snapshot.isEmpty) {
+                        isHardwareLocked = true
+                    }
+                }
+        }
 
-        TextButton(onClick = onNavigateToRegister) {
+        LaunchedEffect(isHardwareLocked, isDeviceOccupied) {
+            Log.d("DeviceDebug", "Security State -> Locked: $isHardwareLocked, Occupied: $isDeviceOccupied")
+        }
+
+        //Register Button Logic
+        TextButton(onClick = {
+            if (isDeviceOccupied || isHardwareLocked) {
+                showLockedDialog = true
+            } else {
+                onNavigateToRegister()
+            }
+        }) {
             Text("Don't have an account? Register here")
+        }
+
+        // Alert Dialog to inform the user
+        if (showLockedDialog) {
+            AlertDialog(
+                onDismissRequest = { showLockedDialog = false },
+                title = { Text("Registration Locked") },
+                text = {
+                    Text(
+                        "This device is already associated with an account and an NFC card. " +
+                                "To register a new account, the existing account and linked card must " +
+                                "be terminated from the Settings menu."
+                    )
+                },
+                confirmButton = {
+                    Button(onClick = { showLockedDialog = false }) {
+                        Text("OK")
+                    }
+                }
+            )
         }
     }
 

@@ -1,6 +1,8 @@
 package com.example.nfcampus.gui
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -24,6 +26,7 @@ import com.example.nfcampus.util.ScannedData
 import com.example.nfcampus.viewmodel.AuthViewModel
 import com.example.nfcampus.dialog.RegistrationVerificationDialog
 import com.example.nfcampus.repository.ActivityLogRepository
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
 // Helper function to check if ScannedData is complete
@@ -35,6 +38,7 @@ fun ScannedData.isComplete(): Boolean {
             intake != "Not Found"
 }
 
+@SuppressLint("HardwareIds")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
@@ -148,10 +152,18 @@ fun RegisterScreen(
                         sharedPrefs.edit {
                             putString("campus_card_uid", nfcUid.replace(":", "").uppercase())
                         }
+
+                        val androidId = android.provider.Settings.Secure.getString(
+                            context.contentResolver,
+                            android.provider.Settings.Secure.ANDROID_ID
+                        )
+
                         // Create and save user to Firestore
                         coroutineScope.launch {
+
                             val user = User(
                                 uid = userId,
+                                deviceId = androidId,
                                 studentId = scannedData.studentId,
                                 email = userEmail,
                                 password = userPassword,
@@ -164,14 +176,28 @@ fun RegisterScreen(
                                 frontImageUri = scannedData.frontImageUri?.toString(),
                                 backImageUri = scannedData.backImageUri?.toString()
                             )
-                            userRepository.saveUser(user)
 
-                            // Add activity log for registration
-                            val logRepository = ActivityLogRepository()
-                            logRepository.addLog(userId, "User Registered")
+                            Log.d("RegisterDebug", "Saving user: $userId to Firestore")
 
-                            authViewModel.signOut()
-                            onRegisterComplete()
+                            // Use a listener to ensure the data is saved before signing out
+                            FirebaseFirestore.getInstance().collection("users")
+                                .document(userId)
+                                .set(user)
+                                .addOnSuccessListener {
+                                    Log.d("RegisterDebug", "User successfully saved to Firestore")
+
+                                    // Now that user is saved, add the log
+                                    val logRepository = ActivityLogRepository()
+                                    logRepository.addLog(userId, "User Registered")
+
+                                    // and now sign out
+                                    authViewModel.signOut()
+                                    onRegisterComplete()
+                                }
+                                .addOnFailureListener { e ->
+                                    Log.e("RegisterDebug", "Failed to save user: ${e.message}")
+
+                                }
                         }
                     },
                     onNavigateToLogin = onNavigateToLogin

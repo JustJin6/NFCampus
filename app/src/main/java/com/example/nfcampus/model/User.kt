@@ -12,5 +12,6 @@ data class User(
     val nfcUid: String? = null,
     val isVerified: Boolean = false,
     val frontImageUri: String? = null,
-    val backImageUri: String? = null
+    val backImageUri: String? = null,
+    val deviceId: String = ""
 )

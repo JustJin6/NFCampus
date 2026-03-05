@@ -1,5 +1,6 @@
 package com.example.nfcampus
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Intent
@@ -49,14 +50,28 @@ class MainActivity : FragmentActivity() {
     // Component name for HCE service
     private lateinit var hceServiceName: ComponentName
 
+    @SuppressLint("HardwareIds")
     private fun syncUidFromFirestoreToPreferences(userId: String) {
-        FirebaseFirestore.getInstance()
+        val currentDeviceId = android.provider.Settings.Secure.getString(
+            contentResolver, android.provider.Settings.Secure.ANDROID_ID
+        )
+            FirebaseFirestore.getInstance()
             .collection("users")
             .document(userId)
             .get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
+                    val registeredDeviceId = document.getString("deviceId")
                     val nfcUid = document.getString("nfcUid")
+
+                    // SECURITY CHECK: Is this the right device?
+                    if (registeredDeviceId != null && registeredDeviceId != currentDeviceId) {
+                        Log.e("Security", "Device ID mismatch! Forcing logout.")
+                        auth.signOut()
+
+                        return@addOnSuccessListener
+                    }
+
                     if (nfcUid != null) {
                         // Store in SharedPreferences
                         preferences.edit {

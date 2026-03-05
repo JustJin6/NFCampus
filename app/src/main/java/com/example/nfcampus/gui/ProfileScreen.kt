@@ -1,6 +1,7 @@
 package com.example.nfcampus.gui
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -40,9 +41,13 @@ fun ProfileScreen() {
         if (currentUserUid != null) {
             coroutineScope.launch {
                 try {
+                    val user = userRepository.getUserByUid(currentUserUid)
                     currentUser.value = userRepository.getUserByUid(currentUserUid)
+                    isLoading = false
                 } catch (e: Exception) {
+                    Log.e("Debug", "Error loading user", e)
                     errorMessage = "Failed to load user data."
+                    isLoading = false
                 } finally {
                     isLoading = false
                 }

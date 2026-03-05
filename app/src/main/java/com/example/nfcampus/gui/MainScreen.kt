@@ -261,7 +261,7 @@ fun HomeContent() {
         delay(500)
         // This IP address allows the app to connect to the IP address of the computer it is running on.
         // IP needs to manually update depending on locations/Wi-Fi
-        val baseUrl = "http://172.18.55.113:3000" //172.18.55.150
+        val baseUrl = "http://172.18.55.113:3000" //192.168.0.133 || 172.18.55.150
 
         // Get the user's unique Firebase UID.
         val userId = FirebaseAuth.getInstance().currentUser?.uid
