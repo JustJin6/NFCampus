@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<host-apdu-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/app_name"
+    android:requireDeviceUnlock="false">
+
+    <aid-group
+        android:description="@string/campus_access"
+        android:category="payment">
+        <aid-filter android:name="A00000006203010C0601"/>
+    </aid-group>
+
+</host-apdu-service>
