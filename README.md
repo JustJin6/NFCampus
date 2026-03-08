@@ -13,7 +13,7 @@
 </table>
 
 <h1 align="center">NFCampus — Smart NFC Campus Access System</h1>
-<p align="center">An Android-based NFC campus access solution that replaces physical student cards with secure mobile credentials.</p>
+<p align="center">An Android-based NFC campus access solution that acts as a secure mobile backup to traditional student identification cards.</p>
 
 **Course:** MAL2020 Computing Group Project  
 **Platform:** Android (Kotlin)
@@ -71,31 +71,77 @@ This solution reduces problems such as:
 
 ---
 
-# 📂 Repository Structure
+# 📂 Project Structure
 
 ```
-NFCampus/
-│
-├── master/                    # Android application source code
-│   ├── Kotlin files
-│   ├── XML layouts
-│   └── Android resources
-│
-├── Document/                  # Project documentation
-│   ├── Client Meeting Minutes - NFCampus (Android).pdf
-│   ├── Figma_Link.md
-│   ├── Individual Contributions to the Group.pdf
-│   ├── LSEP - NFCampus (Android).pdf
-│   ├── Proposal - NFCampus (Android).pdf
-│   ├── UML Diagram - NFCampus (Android).pdf
-│   ├── Video Presentation - NFCampus (Android).pdf
-│   └── Weekly Progress Presentation - NFCampus (Android)
-│
-├── PPTX & Video/              # Presentation materials
-│   ├── Video Presentation - NFCampus (Android).pptx
-│   ├── Video_Link.md
-│   ├── Video_Link (Physical).md
-│   └── Weekly Progress Presentation - NFCampus (Android).pptx
+NFCampus
+app/
+├── manifests/
+│   └── AndroidManifest.xml
+├── kotlin+java/
+│   └── com.example.nfcampus/
+│        ├── dialog/
+│        │   ├── LoginVerificationDialog.kt
+│        │   └── RegistrationVerificationDialog.kt
+│        ├── gui/
+│        │   ├── about/
+│        │   │   ├── PrivacyPolicyScreen.kt
+│        │   │   └── TermsOfServiceScreen.kt
+│        │   ├── access_NFC/
+│        │   │   ├── LinkedCardScreen.kt
+│        │   │   └── NFCTroubleshootingScreen.kt
+│        │   ├── account_security/
+│        │   │   ├── ChangeEmailPasswordScreen.kt
+│        │   │   ├── EmailChangeScreen.kt
+│        │   │   └── PasswordChangeScreen.kt
+│        │   ├── components/
+│        │   │   ├── CaptureImageContract.kt
+│        │   │   ├── NFCSetupStep.kt
+│        │   │   ├── QRCodeGenerator.kt
+│        │   │   ├── RegistrationFormStep.kt
+│        │   │   └── StudentCardScanStep.kt
+│        │   ├── CardScannerScreen.kt
+│        │   ├── ForgotPasswordScreen.kt
+│        │   ├── LoginScreen.kt
+│        │   ├── MainScreen.kt
+│        │   ├── ProfileScreen.kt
+│        │   ├── RegisterScreen.kt
+│        │   ├── ScanCardContract.kt
+│        │   ├── ScannerActivity.kt
+│        │   └── SettingsScreen.kt
+│        ├── model/
+│        │   └── User.kt
+│        ├── nfc/
+│        │   └── HCECardService.kt
+│        ├── repository/
+│        │   ├── ActivityLogRepository.kt
+│        │   └── UserRepository.kt
+│        ├── util/
+│        │   ├── ImageProcessor.kt
+│        │   ├── NotificationHelper.kt
+│        │   └── ScannedData.kt
+│        ├── viewmodel/
+│        │   ├── AuthViewModel.kt
+│        │   ├── EmailChangeViewModel.kt
+│        │   ├── ForgotPasswordViewModel.kt
+│        │   └── PasswordChangeViewModel.kt
+│        └── MainActivity.kt
+└── res/
+     ├── drawable/
+     │   ├── ic_check.xml
+     │   ├── ic_forgotpassword.xml
+     │   ├── ic_launcher_background.xml
+     │   ├── ic_launcher_foreground.xml
+     │   ├── ic_nfcampus.xml
+     │   ├── ic_nfctroubleshooting.xml
+     │   └── ic_sentemail.xml
+     └── xml/
+          ├── apduservice.xml
+          ├── backup_rules.xml
+          ├── data_extraction_rules.xml
+          ├── file_paths.xml
+          ├── network_security_config.xml
+          └── nfc_tech_filter.xml
 ```
 
 ---
@@ -125,7 +171,7 @@ NFCampus/
 ## Clone the Repository
 
 ```bash
-git clone https://github.com/<your-repository>/NFCampus.git
+git clone https://github.com/JustJin6/NFCampus.git
 ```
 
 ---
