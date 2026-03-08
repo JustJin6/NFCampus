@@ -33,7 +33,7 @@
 
 # 📱 Project Overview
 
-**NFCampus** is an Android mobile application designed to modernize campus access systems by replacing traditional **physical RFID access cards** with **smartphone-based NFC authentication**.
+**NFCampus** is an Android mobile application designed to modernize campus access systems by back up traditional **physical RFID access cards** with **smartphone-based NFC authentication**.
 
 Students and staff can simply **tap their phone on NFC readers** to gain access to campus facilities such as:
 
