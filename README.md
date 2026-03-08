@@ -54,7 +54,7 @@ This solution reduces problems such as:
 
 ## 📲 NFC Mobile Access
 - Tap phone on NFC reader to authenticate
-- Replaces physical campus access cards
+- Back up physical campus access cards
 - Secure credential verification
 
 ## 🔔 Access Alerts & Notifications
