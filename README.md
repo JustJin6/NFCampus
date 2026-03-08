@@ -1,12 +1,19 @@
-<div style="display: flex; justify-content: space-between; align-items: center;">
-  <img src="assets/.png" alt="Peninsula College - The Ship Campus Logo" width="250" style="padding: 5px;">
-  <img src="assets/NFCampus Logo.png" alt="NFCampus Logo" width="150" height="150" style="padding: 5px;">
-  <img src="assets/UoP Logo.png" alt="University of Plymouth Logo" width="250" style="background-color: white; padding: 5px; border-radius: 8px;">
-</div>
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="assets/PCN Logo.png" alt="Peninsula College - The Ship Campus Logo" width="250">
+    </td>
+    <td align="center">
+      <img src="assets/NFCampus Logo.png" alt="NFCampus Logo" width="125">
+    </td>
+    <td align="center">
+      <img src="assets/UoP Logo.png" alt="University of Plymouth Logo" width="320">
+    </td>
+  </tr>
+</table>
 
-# NFCampus — Smart NFC Campus Access System
-
-> **An Android-based NFC campus access solution that replaces physical student cards with a secure mobile credential system.**
+<h1 align="center">NFCampus — Smart NFC Campus Access System</h1>
+<p align="center">An Android-based NFC campus access solution that replaces physical student cards with secure mobile credentials.</p>
 
 **Course:** MAL2020 Computing Group Project  
 **Platform:** Android (Kotlin)
