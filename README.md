@@ -1,5 +1,5 @@
 <div style="display: flex; justify-content: space-between; align-items: center;">
-  <img src="assets/PCN Logo.png" alt="Peninsula College - The Ship Campus Logo" width="250" style="padding: 5px;">
+  <img src="assets/.png" alt="Peninsula College - The Ship Campus Logo" width="250" style="padding: 5px;">
   <img src="assets/NFCampus Logo.png" alt="NFCampus Logo" width="150" height="150" style="padding: 5px;">
   <img src="assets/UoP Logo.png" alt="University of Plymouth Logo" width="250" style="background-color: white; padding: 5px; border-radius: 8px;">
 </div>
