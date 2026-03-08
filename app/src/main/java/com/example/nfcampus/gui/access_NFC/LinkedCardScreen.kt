@@ -64,7 +64,7 @@ fun LinkedCardScreen(
         if (showSuccessDialog) {
             delay(3000) // Show for 3 seconds
             showSuccessDialog = false
-           // onLogoutAndNavigateToLogin()
+            onLogoutAndNavigateToLogin()
         }
     }
 

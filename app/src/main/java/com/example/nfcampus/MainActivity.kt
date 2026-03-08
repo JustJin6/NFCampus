@@ -55,7 +55,7 @@ class MainActivity : FragmentActivity() {
         val currentDeviceId = android.provider.Settings.Secure.getString(
             contentResolver, android.provider.Settings.Secure.ANDROID_ID
         )
-            FirebaseFirestore.getInstance()
+        FirebaseFirestore.getInstance()
             .collection("users")
             .document(userId)
             .get()

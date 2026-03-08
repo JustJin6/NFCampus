@@ -72,7 +72,7 @@ fun NFCTroubleshootingScreen() {
                         horizontalArrangement = Arrangement.Start
                     ) {
                         Text(
-                            text = "i. ",
+                            text = "i.  ",
                             style = MaterialTheme.typography.bodyLarge,
                         )
                         Text(
@@ -81,6 +81,7 @@ fun NFCTroubleshootingScreen() {
                             modifier = Modifier.weight(1f)
                         )
                     }
+                    Spacer(modifier = Modifier.height(5.dp))
 
                     // Step 1 - ii
                     Row(
@@ -148,7 +149,7 @@ fun NFCTroubleshootingScreen() {
                         horizontalArrangement = Arrangement.Start
                     ) {
                         Text(
-                            text = "i. ",
+                            text = "i.  ",
                             style = MaterialTheme.typography.bodyLarge,
                         )
                         Text(
@@ -157,6 +158,7 @@ fun NFCTroubleshootingScreen() {
                             modifier = Modifier.weight(1f)
                         )
                     }
+                    Spacer(modifier = Modifier.height(5.dp))
 
                     // Step 2 - ii
                     Row(
@@ -169,6 +171,68 @@ fun NFCTroubleshootingScreen() {
                         )
                         Text(
                             text = "Hold it there for about 1-2 seconds until you feel a vibration or hear a beep.",
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Step 3
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Text(
+                    text = "3.",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = "Enable Background NFC Access",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Step 3 - i
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Text(
+                            text = "i.  ",
+                            style = MaterialTheme.typography.bodyLarge,
+                        )
+                        Text(
+                            text = "Go to your phone's Settings > Connections",
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(5.dp))
+
+                    // Step 3 - ii
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Text(
+                            text = "ii. ",
+                            style = MaterialTheme.typography.bodyLarge,
+                        )
+                        Text(
+                            text = "Tap \"Default Payment App\" and select \"NFCampus\" as the default.",
                             style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier.weight(1f)
                         )

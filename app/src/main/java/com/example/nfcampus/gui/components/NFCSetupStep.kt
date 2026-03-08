@@ -14,6 +14,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.nfcampus.MainActivity
 import kotlinx.coroutines.delay
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 
 @Composable
 fun NFCSetupStep(
@@ -33,7 +36,28 @@ fun NFCSetupStep(
     // Check NFC availability
     val nfcAdapter = remember { android.nfc.NfcAdapter.getDefaultAdapter(context) }
     val nfcAvailable = nfcAdapter != null
-    val nfcEnabled = nfcAdapter?.isEnabled == true
+    // val nfcEnabled = nfcAdapter?.isEnabled == true
+
+    // Make nfcEnabled a mutable state so Compose knows to update the UI when it changes
+    var nfcEnabled by remember { mutableStateOf(nfcAdapter?.isEnabled == true) }
+
+    // Get the current LifecycleOwner
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    // Add an observer to check the NFC status every time the app resumes
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                nfcEnabled = nfcAdapter?.isEnabled == true
+            }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
 
     // Enable / Disable NFC for the app
     LaunchedEffect(isScanning) {
@@ -144,23 +168,8 @@ fun NFCSetupStep(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        when {
-            !nfcAvailable -> {
-                Button(
-                    onClick = {
-                        nfcDetected = true
-                        nfcUid = "04:A3:B2:C1"
-                        hceEnabled = true
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondary
-                    ),
-                    modifier = Modifier.fillMaxWidth(0.8f)
-                ) {
-                    Text("Use Demo Mode")
-                }
-            }
 
+        when {
             !nfcEnabled -> {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -175,19 +184,6 @@ fun NFCSetupStep(
                     ) {
                         Text("Enable NFC")
                     }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    OutlinedButton(
-                        onClick = {
-                            nfcDetected = true
-                            nfcUid = "04:A3:B2:C1"
-                            hceEnabled = true
-                        },
-                        modifier = Modifier.fillMaxWidth(0.8f)
-                    ) {
-                        Text("Demo Mode")
-                    }
                 }
             }
 
@@ -200,19 +196,6 @@ fun NFCSetupStep(
                         modifier = Modifier.fillMaxWidth(0.8f)
                     ) {
                         Text("Start")
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    OutlinedButton(
-                        onClick = {
-                            nfcDetected = true
-                            nfcUid = "04:A3:B2:C1"
-                            hceEnabled = true
-                        },
-                        modifier = Modifier.fillMaxWidth(0.8f)
-                    ) {
-                        Text("Demo Mode")
                     }
                 }
             }
