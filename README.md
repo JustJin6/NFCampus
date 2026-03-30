@@ -45,7 +45,6 @@ This solution reduces problems such as:
 - **OCR Card Registration** — Scan physical cards with camera
 - **One Device, One Account** — Hardware binding prevents sharing
 - **Activity Logging** — Full audit trail in Firestore
-- **QR Fallback** — Manual verification when NFC unavailable
 - **Background Support** — Works when app isn't open
 
 ---
