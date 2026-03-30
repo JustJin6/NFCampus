@@ -220,8 +220,8 @@ All project documentation can be found in the **Document branch**, including:
 
 # 🎥 Project Presentation
 
-- **Presentation Slides:** Available in the repository  
-- **Video Demonstration:** See `Video_Link.md`
+- **Presentation Slides:** Available in the repository [`Presentation Slides/NFCampus (Android) - Final Presentation`](#)  
+- **Video Demonstration:** https://youtu.be/fZcIQbSTMfs
 
 ---
 
@@ -232,7 +232,7 @@ The system interface was designed using **Figma**.
 Figma prototype link can be found in:
 
 ```
-Document/Figma_Link.md
+assets/Figma_Link.md
 ```
 
 ---
