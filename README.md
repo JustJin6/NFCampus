@@ -125,7 +125,8 @@ app/
 
 ---
 
-# 🛠 Technologies Used
+<h1 align="center">🛠 Technologies Used</h1>
+<div align="center">
 
 | Badge | Description |
 |-------|-------------|
@@ -141,6 +142,8 @@ app/
 | <div align="center">![ML Kit](https://img.shields.io/badge/Google_ML_Kit-4285F4?style=for-the-badge&logo=google&logoColor=white)</div> | **Google ML Kit & CameraX**: OCR and camera processing |
 | <div align="center">![ZXing](https://img.shields.io/badge/ZXing-000000?style=for-the-badge&logoColor=white)</div> | **ZXing**: Barcode / QR code scanning |
 | <div align="center">![Coil](https://img.shields.io/badge/Coil-FF6F00?style=for-the-badge&logo=android&logoColor=white)</div> | **Coil**: Image loading for Android |
+
+</div>
 
 ---
 
@@ -191,29 +194,33 @@ git clone https://github.com/JustJin6/NFCampus.git
 
 ---
 
-# 🎥 Project Presentation
+<h1 align="center">🎥 Project Presentation</h1>
 
-- **Presentation Slides:** Available in the repository [`Presentation Slides/NFCampus (Android) - Final Presentation`](#)  
-- **Video Demonstration:** https://youtu.be/fZcIQbSTMfs
-
----
-
-# 🎨 UI/UX Design
-
-The system interface was designed using **Figma**.
-
-- **Figma Prototype Link:** https://www.figma.com/design/y4SipWwkOrDogSPzE1BiCH/NFCampus---Android?node-id=0-1&t=UWFm8yZLmQSnHGer-1
+<p align="center">
+  📊 <a href="./Presentation%20Slides/NFCampus%20(Android)%20-%20Final%20Presentation.pptx">View Slides</a> •
+  🎬 <a href="https://youtu.be/fZcIQbSTMfs">Watch Demo</a>
+</p>
 
 ---
 
-# 👥 Team
+<h1 align="center">🎨 UI / UX Design</h1>
+<p align="center">
+  📱 <a href="https://www.figma.com/design/y4SipWwkOrDogSPzE1BiCH/NFCampus---Android?node-id=0-1&t=UWFm8yZLmQSnHGer-1">View System Interface (Figma)</a>
+</p>
 
-| Name | Student ID |
-|-----|-----|
-| **Eu Jin Yang** | BSSE2506021 |
-| **Ng Kean Chun** | BSSE2506036 |
-| **Teoh Yi Shan** | BSSE2506022 |
-| **Yong Ken** | BSSE2506025 |
+---
+
+<h1 align="center">👥 Team</h1>
+<div align="center">
+
+| 👤 Name | 🆔 Student ID | 🎯 Role |
+|:------:|:-------------:|:--------:|
+| **Eu Jin Yang** | BSSE2506021 | 🧑‍💻 Team Leader & Full-Stack Developer / NFC & Security Lead |
+| **Ng Kean Chun** | BSSE2506036 | 📱 Project Analyst & OCR Developer / Frontend Specialist |
+| **Teoh Yi Shan** | BSSE2506022 | 🔌 Client Communication Lead & Meeting Secretary / Documentation Coordinator |
+| **Yong Ken** | BSSE2506025 | 📊 System Design & Planning Lead / UML Modeling Specialist |
+
+</div>
 
 ---
 
