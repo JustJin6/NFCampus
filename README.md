@@ -20,22 +20,11 @@
 
 ---
 
-# 👥 Group Members
-
-| Name | Student ID |
-|-----|-----|
-| **Eu Jin Yang** | BSSE2506021 |
-| **Ng Kean Chun** | BSSE2506036 |
-| **Teoh Yi Shan** | BSSE2506022 |
-| **Yong Ken** | BSSE2506025 |
-
----
-
 # 📱 Project Overview
 
 **NFCampus** is an Android mobile application designed to modernize campus access systems by back up traditional **physical RFID access cards** with **smartphone-based NFC authentication**.
 
-Students and staff can simply **tap their phone on NFC readers** to gain access to campus facilities such as:
+Students can simply **tap their phone on NFC readers** to gain access to campus facilities such as:
 
 - Classrooms
 - Laboratories
@@ -52,22 +41,12 @@ This solution reduces problems such as:
 
 # 🎯 Key Features
 
-## 📲 NFC Mobile Access
-- Tap phone on NFC reader to authenticate
-- Back up physical campus access cards
-- Secure credential verification
-
-## 🔔 Access Alerts & Notifications
-- Receive alerts when access is denied
-- Real-time status updates
-
-## ⚙️ Background NFC Support
-- Works even when the app is **not open**
-- Can be enabled by setting the app as the **Default Payment App**
-
-## 🔐 Secure Authentication
-- User identity validation
-- Protection against unauthorized access
+- **NFC Mobile Access** — Tap phone on ESP32-based readers
+- **OCR Card Registration** — Scan physical cards with camera
+- **One Device, One Account** — Hardware binding prevents sharing
+- **Activity Logging** — Full audit trail in Firestore
+- **QR Fallback** — Manual verification when NFC unavailable
+- **Background Support** — Works when app isn't open
 
 ---
 
@@ -148,13 +127,20 @@ app/
 
 # 🛠 Technologies Used
 
-| Technology | Purpose |
-|------------|---------|
-| **Kotlin** | Android application development |
-| **XML** | Android UI layout design |
-| **Android Studio** | Development environment |
-| **NFC Technology** | Contactless authentication |
-| **Figma** | UI/UX design prototype |
+| Badge | Description |
+|-------|-------------|
+| <div align="center">![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)</div> | **Kotlin**: Primary language for Android development |
+| <div align="center">![Jetpack Compose](https://img.shields.io/badge/Jetpack_Compose-4285F4?style=for-the-badge&logo=android&logoColor=white)</div> | **Jetpack Compose**: Modern Android UI toolkit |
+| <div align="center">![Android Studio](https://img.shields.io/badge/Android_Studio-3DDC84?style=for-the-badge&logo=android-studio&logoColor=white)</div> | **Android Studio**: Official IDE for Android development |
+| <div align="center">![NFC](https://img.shields.io/badge/NFC_Technology-0A0A0A?style=for-the-badge&logoColor=white)</div> | **NFC Technology**: Contactless authentication system |
+| <div align="center">![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)</div> | **Figma**: UI/UX design and prototyping |
+| <div align="center">![Arduino](https://img.shields.io/badge/Arduino_IDE-00979D?style=for-the-badge&logo=arduino&logoColor=white)</div> | **Arduino IDE**: Programming microcontrollers |
+| <div align="center">![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)</div> | **Firebase & Firestore**: Backend services and real-time database |
+| <div align="center">![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)</div> | **Node.js (Express.js)**: Backend API development |
+| <div align="center">![ESP32](https://img.shields.io/badge/ESP32-000000?style=for-the-badge&logo=espressif&logoColor=white)</div> | **ESP32, PN532 & LCD**: Embedded hardware components |
+| <div align="center">![ML Kit](https://img.shields.io/badge/Google_ML_Kit-4285F4?style=for-the-badge&logo=google&logoColor=white)</div> | **Google ML Kit & CameraX**: OCR and camera processing |
+| <div align="center">![ZXing](https://img.shields.io/badge/ZXing-000000?style=for-the-badge&logoColor=white)</div> | **ZXing**: Barcode / QR code scanning |
+| <div align="center">![Coil](https://img.shields.io/badge/Coil-FF6F00?style=for-the-badge&logo=android&logoColor=white)</div> | **Coil**: Image loading for Android |
 
 ---
 
@@ -205,19 +191,6 @@ git clone https://github.com/JustJin6/NFCampus.git
 
 ---
 
-# 📑 Project Documentation
-
-All project documentation can be found in the **Document branch**, including:
-
-- Project Proposal
-- UML Diagrams
-- Client Meeting Minutes
-- Weekly Progress Reports
-- Individual Contribution Report
-- Presentation Slides
-
----
-
 # 🎥 Project Presentation
 
 - **Presentation Slides:** Available in the repository [`Presentation Slides/NFCampus (Android) - Final Presentation`](#)  
@@ -229,34 +202,21 @@ All project documentation can be found in the **Document branch**, including:
 
 The system interface was designed using **Figma**.
 
-Figma prototype link can be found in:
-
-```
-assets/Figma_Link.md
-```
+- **Figma Prototype Link:** https://www.figma.com/design/y4SipWwkOrDogSPzE1BiCH/NFCampus---Android?node-id=0-1&t=UWFm8yZLmQSnHGer-1
 
 ---
 
-# 🔐 Security Considerations
+# 👥 Team
 
-- Secure NFC authentication mechanism
-- Protection against unauthorized access
-- Controlled access management
+| Name | Student ID |
+|-----|-----|
+| **Eu Jin Yang** | BSSE2506021 |
+| **Ng Kean Chun** | BSSE2506036 |
+| **Teoh Yi Shan** | BSSE2506022 |
+| **Yong Ken** | BSSE2506025 |
 
 ---
 
 # 📄 License
 
 This project was developed for **academic purposes** under the **MAL2020 Computing Group Project**.
-
----
-
-# 🙏 Acknowledgements
-
-- Course instructors and supervisors
-- Android development community
-- NFC technology documentation and resources
-
----
-
-⭐ **NFCampus — Simplifying campus access with NFC technology.**
