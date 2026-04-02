@@ -197,7 +197,8 @@ git clone https://github.com/JustJin6/NFCampus.git
 
 <p align="center">
   📊 <a href="./Presentation%20Slides/NFCampus%20(Android)%20-%20Final%20Presentation.pptx">View Slides</a> •
-  🎬 <a href="https://youtu.be/fZcIQbSTMfs">Watch Demo</a>
+  🎬 <a href="https://youtu.be/fZcIQbSTMfs">Watch Presentation (Online Record)</a> •
+  🎬 <a href="https://youtu.be/A7VD5VxUNns">Watch Showcase Presentation</a>
 </p>
 
 ---
